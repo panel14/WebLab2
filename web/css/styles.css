@@ -1,0 +1,38 @@
+body{
+    background-image: url("../res/back.jpg");
+    background-repeat: no-repeat;
+    text-align: center;
+    color: #ff5050;
+}
+
+header{
+    font-family: sans-serif;
+    font-size: 24px;
+    border: 4px;
+    background-color: #000000;
+    opacity: 0.6;
+}
+
+div {
+    width: 30%;
+    height: auto;
+    float: left;
+    margin: 0 4px 4px 0;
+    background-color: #000000;
+    opacity: 0.6;
+    justify-content: center;
+}
+
+div.graph{
+    width: auto;
+    border: solid 3px #000000;
+    margin: 0 10px 10px 0;
+}
+
+input {
+    margin: 4px;
+}
+
+select {
+    margin: 5px 0 0 5px;
+}

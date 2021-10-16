@@ -34,7 +34,7 @@
                 out.println("<option value=\""+ x + "\">"+ x + "</option>");
             %>
           </select><br/>
-          <input type="button" value="Send">
+          <input type="button" value="Send" onclick="validateForm()">
         </fieldset>
       </form>
     </div>

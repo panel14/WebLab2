@@ -1,11 +1,14 @@
 let st_canv;
+let wight;
+let height;
+let SCALE_COEF = 0.35
 let r = 0;
 
 function init(){
     let canvas = document.getElementById("paint");
     st_canv = canvas.getContext("2d");
-    let wight = $('#paint').width();
-    let height = $('#paint').height();
+    wight = $('#paint').width();
+    height = $('#paint').height();
     printField(st_canv, wight, height);
     printGraph(st_canv, wight, height);
     canvas.addEventListener("click", canvasClick, false);
@@ -105,7 +108,7 @@ function printGraph(canvas_context, wight, height){
     canvas_context.moveTo(wight * 0.15, height / 2);
     canvas_context.lineTo(wight * 0.15, height * 0.325);
     canvas_context.lineTo(wight / 2, height * 0.325);
-    canvas_context.arc(wight / 2, height / 2, (height / 2) * 0.7,
+    canvas_context.arc(wight / 2, height / 2, height * SCALE_COEF,
         Math.PI / 2, Math.PI, false);
     canvas_context.strokeStyle = "#ff5555";
     canvas_context.stroke();
@@ -120,7 +123,7 @@ function printPoint(x, y){
 function canvasClick(e){
     let x = e.pageX;
     let y = e.pageY;
-    if (r >= 1 && r <= 3)
+    if (!(r == 0))
         getCoord(x, y);
     else
         alert("Значение R не установлено!")
@@ -131,11 +134,33 @@ function getCoord(x, y){
     y -= document.getElementById('paint').offsetTop;
     printPoint(x, y);
     x -= 200;
+    x = (x * r)/(wight * SCALE_COEF);
     y = -y + 200;
+    y = (y * r)/(height * SCALE_COEF);
+    console.log(x, y);
+    // Отправка на сервер
 }
 
-function validateValue(){
+function validateForm(){
+    let fail_str = validateValue($('#xVal').val(), "X", [-3, 5]);
+    fail_str += validateValue($('#yVal').val(), "Y", [-5, 5]);
+    if (r == 0)
+        fail_str += "Не выбрано значение R\n";
+    if (fail_str == ""){
+        alert("Удачно");
+    }
+    else
+        alert(fail_str);
+}
 
+function validateValue(str, valueType, range){
+    if (str == "")
+        return "Не введено значение " + valueType + "\n";
+    else if (!/^-?\d+([.]\d+)?$/.test(str))
+        return "Поле " + valueType + " может содержать только цифры (разделитель - точка)\n";
+    else if (parseInt(str) < range[0] || parseInt(str) > range[1])
+        return "Значение " + valueType + " выходит за пределы допустимого диапазона ["+ range[0] + ";" + range[1] +"]\n";
+    return "";
 }
 
 $('#rVal').change( function (){

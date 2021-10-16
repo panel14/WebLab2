@@ -1,12 +1,13 @@
 body{
     background-image: url("../res/back.jpg");
     background-repeat: no-repeat;
+    font-family: sans-serif;
+    font-size: 20px;
     text-align: center;
     color: #ff5050;
 }
 
 header{
-    font-family: sans-serif;
     font-size: 24px;
     border: 4px;
     background-color: #000000;
@@ -14,19 +15,53 @@ header{
 }
 
 div {
-    width: 30%;
     height: auto;
-    float: left;
     margin: 0 4px 4px 0;
-    background-color: #000000;
-    opacity: 0.6;
-    justify-content: center;
 }
 
-div.graph{
-    width: auto;
+div.vertical{
+    width: 100%;
+    background-color: #000000;
+    opacity: 0.6;
+}
+
+div.vertical > *{
+    width: 50%;
+}
+
+div.horizontal{
+    width: 100%;
+    position: relative;
+}
+
+div.horizontal > *{
+    width: 50%;
+    display: inline-block;
+}
+
+div#form{
+    float: left;
+}
+
+div#graph{
     border: solid 3px #000000;
     margin: 0 10px 10px 0;
+}
+
+div#table{
+    float: right;
+}
+
+table caption {
+    border: solid 2px #646464;
+    font-size: 22px;
+}
+
+table {
+    width: 100%;
+    margin: 0 4px 4px 0;
+    border-collapse: separate;
+
 }
 
 input {

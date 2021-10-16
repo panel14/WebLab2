@@ -18,28 +18,44 @@
       Верзаков Александр Юрьевич, P3232, вариант 32125
     </header>
     <br/>
-    <div>
-      <form method="post" action="">
-        <fieldset>
-          <legend>Введите данные</legend>
-          <label for="xVal">X:</label>
-          <input type="text" maxlength="5" id="xVal"><br/>
-          <label for="yVal">Y:</label>
-          <input type="text" maxlength="5" id="yVal"><br/>
-          <label for="rVal">R:</label>
-          <select id="rVal">
-            <%
-              out.println("<option value=\"0\">---</option>");
-              for (float x = 1; x <= 3; x += 0.5)
-                out.println("<option value=\""+ x + "\">"+ x + "</option>");
-            %>
-          </select><br/>
-          <input type="button" value="Send" onclick="validateForm()">
-        </fieldset>
-      </form>
+    <div class="vertical">
+      <div class="horizontal">
+        <div id="form">
+          <form method="post" action="">
+            <fieldset>
+              <legend>Введите данные</legend>
+              <label for="xVal">X:</label>
+              <input type="text" maxlength="5" id="xVal"><br/>
+              <label for="yVal">Y:</label>
+              <input type="text" maxlength="5" id="yVal"><br/>
+              <label for="rVal">R:</label>
+              <select id="rVal">
+                <%
+                  out.println("<option value=\"0\">---</option>");
+                  for (float x = 1; x <= 3; x += 0.5)
+                    out.println("<option value=\""+ x + "\">"+ x + "</option>");
+                %>
+              </select><br/>
+              <input type="button" value="Send" onclick="validateForm()">
+            </fieldset>
+          </form>
+        </div>
+        <div id="table">
+          <table>
+            <caption>Результаты</caption>
+            <tr>
+              <th>X</th>
+              <th>Y</th>
+              <th>R</th>
+              <th></th>
+            </tr>
+          </table>
+        </div>
+      </div>
+      <div id="graph">
+        <canvas id="paint" width="400px" height="400px"></canvas>
+      </div>
     </div>
-    <div class="graph">
-      <canvas id="paint" width="400px" height="400px"></canvas>
-    </div>
+
   </body>
 </html>

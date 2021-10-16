@@ -147,7 +147,7 @@ function validateForm(){
     if (r == 0)
         fail_str += "Не выбрано значение R\n";
     if (fail_str == ""){
-        alert("Удачно");
+        alert("Удачно"); //Отправка на сервер
     }
     else
         alert(fail_str);

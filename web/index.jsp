@@ -10,8 +10,8 @@
   <head>
     <title>Lab2</title>
     <link href="${pageContext.request.contextPath}/css/styles.css" rel="stylesheet" type="text/css">
-    <script src="${pageContext.request.contextPath}/js/index.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script defer src="${pageContext.request.contextPath}/js/index.js"></script>
   </head>
   <body onload="init()">
     <header>
@@ -29,9 +29,9 @@
           <label for="rVal">R:</label>
           <select id="rVal">
             <%
-              for (float x = 1; x <= 3; x += 0.5){
-                out.println("<option>"+ x + "</option>");
-              }
+              out.println("<option value=\"0\">---</option>");
+              for (float x = 1; x <= 3; x += 0.5)
+                out.println("<option value=\""+ x + "\">"+ x + "</option>");
             %>
           </select><br/>
           <input type="button" value="Send">

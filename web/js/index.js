@@ -138,16 +138,21 @@ function getCoord(x, y){
     y = -y + 200;
     y = (y * r)/(height * SCALE_COEF);
     console.log(x, y);
-    // Отправка на сервер
+    document.getElementById('xVal').setAttribute('value', x.toFixed(2));
+    document.getElementById('yVal').setAttribute('value', y.toFixed(2));
+
+    let data = formData(x, y, r);
+    sendData(data);
 }
 
-function validateForm(){
-    let fail_str = validateValue($('#xVal').val(), "X", [-3, 5]);
-    fail_str += validateValue($('#yVal').val(), "Y", [-5, 5]);
+function validateForm(form){
+    let fail_str = validateValue(form.xVal.value, "X", [-3, 5]);
+    fail_str += validateValue(form.yVal.value, "Y", [-5, 5]);
     if (r == 0)
         fail_str += "Не выбрано значение R\n";
     if (fail_str == ""){
-        alert("Удачно"); //Отправка на сервер
+        let data = formData(form.xVal.value, form.yVal.value, r)
+        sendData(data)
     }
     else
         alert(fail_str);
@@ -161,6 +166,29 @@ function validateValue(str, valueType, range){
     else if (parseInt(str) < range[0] || parseInt(str) > range[1])
         return "Значение " + valueType + " выходит за пределы допустимого диапазона ["+ range[0] + ";" + range[1] +"]\n";
     return "";
+}
+
+function sendData(data){
+    $.ajax({
+        type: "post",
+        url: "post",
+        data: data,
+        success: function (data){
+            $('table tr:last').after(`<tr>
+                                        <th>${data.xVal.toFixed(2)}</th>
+                                        <th>${data.yVal.toFixed(2)}</th>
+                                        <th>${data.rVal}</th>
+                                        <th>${data.runTime}</th>
+                                        <th>${data.currentTime}</th>
+                                        <th>${data.answer}</th>
+                                      </tr>`);
+        }
+    });
+}
+
+function formData(x, y, r){
+    return {"xVal" : x, "yVal": y, "rVal": r};
+
 }
 
 $('#rVal').change( function (){

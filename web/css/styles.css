@@ -19,49 +19,41 @@ div {
     margin: 0 4px 4px 0;
 }
 
-div.vertical{
-    width: 100%;
-    background-color: #000000;
-    opacity: 0.6;
-}
-
-div.vertical > *{
-    width: 50%;
-}
-
-div.horizontal{
-    width: 100%;
-    position: relative;
-}
-
-div.horizontal > *{
-    width: 50%;
-    display: inline-block;
+div.toning{
+    background-color: black;
+    opacity: 0.8;
 }
 
 div#form{
     float: left;
+    width: 40%;
+}
+
+div#table{
+    float: right;
+    width: 55%;
 }
 
 div#graph{
     border: solid 3px #000000;
     margin: 0 10px 10px 0;
-}
-
-div#table{
-    float: right;
+    width: 40%;
 }
 
 table caption {
     border: solid 2px #646464;
     font-size: 22px;
+    margin: 3px;
+}
+
+table th {
+    border: solid 1px #646464;
 }
 
 table {
     width: 100%;
     margin: 0 4px 4px 0;
     border-collapse: separate;
-
 }
 
 input {

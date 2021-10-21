@@ -1,13 +1,14 @@
 package app.beans;
 
 import org.json.JSONObject;
-
-import javax.ejb.Stateful;
 import java.util.ArrayList;
 
-@Stateful
-public class MainBean {
-    private ArrayList<JSONObject> JSONTable = new ArrayList<JSONObject>();
+public class StorageBean {
+    private ArrayList<JSONObject> JSONTable ;
+
+    public StorageBean(){
+        this.JSONTable = new ArrayList<JSONObject>();
+    }
 
     public ArrayList<JSONObject> getJSONTable() {
         return JSONTable;
@@ -19,5 +20,9 @@ public class MainBean {
 
     public void putJSONAnswer(JSONObject answer){
         JSONTable.add(answer);
+    }
+
+    public void cleanJSONTable(){
+        JSONTable.clear();
     }
 }

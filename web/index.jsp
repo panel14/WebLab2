@@ -36,6 +36,7 @@
               %>
             </select><br/>
             <input type="button" value="Send" onclick="validateForm(form)">
+            <button onclick="removeStorage()">Очистить таблицу</button>
           </fieldset>
         </form>
       </div>

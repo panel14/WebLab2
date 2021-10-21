@@ -3,6 +3,10 @@ let wight;
 let height;
 let SCALE_COEF = 0.35
 let r = 0;
+let isGraphCall;
+let isCleanStorage
+
+window.addEventListener('load', pageOpened, false);
 
 function init(){
     let canvas = document.getElementById("paint");
@@ -114,10 +118,31 @@ function printGraph(canvas_context, wight, height){
     canvas_context.stroke();
 }
 
-function printPoint(x, y){
+function printPoint(x, y, r, answer){
     st_canv.beginPath();
-    st_canv.arc(x , y , 3, Math.PI * 2, 0, false);
+    let points = convertToPrint(x, y, r)
+    if (answer == "Yes")
+        st_canv.fillStyle = "#04a242"
+    else
+        st_canv.fillStyle = "#ff5555"
+    st_canv.arc(points[0] , points[1] , 3, Math.PI * 2, 0, false);
     st_canv.fill();
+}
+
+function convertToSend(x, y, r){
+    x -= 200;
+    x = (x * r)/(wight * SCALE_COEF);
+    y = -y + 200;
+    y = (y * r)/(height * SCALE_COEF);
+    return [x, y]
+}
+
+function convertToPrint(x, y, r){
+    x = (x * wight * SCALE_COEF)/r;
+    x += 200;
+    y = (y * height * SCALE_COEF)/r;
+    y = -y + 200;
+    return [x , y]
 }
 
 function canvasClick(e){
@@ -132,16 +157,12 @@ function canvasClick(e){
 function getCoord(x, y){
     x -= document.getElementById('paint').offsetLeft;
     y -= document.getElementById('paint').offsetTop;
-    printPoint(x, y);
-    x -= 200;
-    x = (x * r)/(wight * SCALE_COEF);
-    y = -y + 200;
-    y = (y * r)/(height * SCALE_COEF);
-    console.log(x, y);
-    document.getElementById('xVal').setAttribute('value', x.toFixed(2));
-    document.getElementById('yVal').setAttribute('value', y.toFixed(2));
+    let points = convertToSend(x, y, r)
+    document.getElementById('xVal').setAttribute('value', points[0].toFixed(2));
+    document.getElementById('yVal').setAttribute('value', points[1].toFixed(2));
 
-    let data = formData(x, y, r);
+    let data = formData(points[0], points[1], r);
+    isGraphCall = true;
     sendData(data);
 }
 
@@ -174,21 +195,51 @@ function sendData(data){
         url: "post",
         data: data,
         success: function (data){
+            let curData = parseData(data)
             $('table tr:last').after(`<tr>
-                                        <th>${data.xVal.toFixed(2)}</th>
-                                        <th>${data.yVal.toFixed(2)}</th>
-                                        <th>${data.rVal}</th>
-                                        <th>${data.runTime}</th>
-                                        <th>${data.currentTime}</th>
-                                        <th>${data.answer}</th>
+                                        <th>${curData.xVal.toFixed(2)}</th>
+                                        <th>${curData.yVal.toFixed(2)}</th>
+                                        <th>${curData.rVal}</th>
+                                        <th>${curData.runTime}</th>
+                                        <th>${curData.currentTime}</th>
+                                        <th>${curData.answer}</th>
                                       </tr>`);
+            if (isGraphCall){
+                printPoint(curData.xVal, curData.yVal, curData.rVal, curData.answer)
+            }
         }
     });
 }
 
-function formData(x, y, r){
-    return {"xVal" : x, "yVal": y, "rVal": r};
+function parseData(data){
+    let currData = data[data.length - 1]
+    localStorage.setItem("storage", JSON.stringify(data))
+    return currData;
+}
 
+function pageOpened(){
+    let storage = JSON.parse(localStorage.getItem("storage"));
+    if (storage != null){
+        for (let i = 0; i < storage.length; i++){
+            $('table tr:last').after(`<tr>
+                                        <th>${storage[i].xVal.toFixed(2)}</th>
+                                        <th>${storage[i].yVal.toFixed(2)}</th>
+                                        <th>${storage[i].rVal}</th>
+                                        <th>${storage[i].runTime}</th>
+                                        <th>${storage[i].currentTime}</th>
+                                        <th>${storage[i].answer}</th>
+                                      </tr>`)
+        }
+    }
+}
+
+function formData(x, y, r){
+    return {"xVal" : x, "yVal": y, "rVal": r, "isCleanBean": isCleanStorage};
+}
+
+function removeStorage(){
+    localStorage.removeItem("storage");
+    isCleanStorage = true;
 }
 
 $('#rVal').change( function (){

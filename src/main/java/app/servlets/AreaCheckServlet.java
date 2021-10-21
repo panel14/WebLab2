@@ -1,20 +1,22 @@
 package app.servlets;
 
-import app.beans.MainBean;
-import org.decimal4j.util.DoubleRounder;
+import app.beans.IStorage;
+import app.beans.StorageBean;
 import org.json.JSONObject;
 
 import javax.ejb.EJB;
+import javax.enterprise.context.ApplicationScoped;
 import javax.servlet.*;
 import javax.servlet.http.*;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 
 public class AreaCheckServlet extends HttpServlet {
-    @EJB
-    private MainBean ejb;
+
+    private StorageBean storage= new StorageBean();
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
@@ -23,7 +25,7 @@ public class AreaCheckServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
-        Date start = new Date();
+        long start = System.currentTimeMillis();
         SimpleDateFormat format = new SimpleDateFormat("HH:mm:ss");
 
         request.setCharacterEncoding("UTF-8");
@@ -36,26 +38,30 @@ public class AreaCheckServlet extends HttpServlet {
         String answer = checkArea(x, y, r, quarter);
         JSONObject jsonAnswer = makeJSON(x, y, r, answer);
 
-        long end = new Date().getTime();
-        long subTime = end - start.getTime();
+        long end = System.currentTimeMillis();
+        long subTime = end - start;
 
         jsonAnswer.put("currentTime", format.format(start));
         jsonAnswer.put("runTime", subTime);
 
-        //ejb.putJSONAnswer(jsonAnswer);
+        boolean isClean = Boolean.parseBoolean(request.getParameter("isCleanBean"));
+        if (isClean)
+            storage.cleanJSONTable();
+        storage.putJSONAnswer(jsonAnswer);
+
         PrintWriter writer = response.getWriter();
-        writer.println(jsonAnswer);
+        writer.println(storage.getJSONTable());
         writer.close();
     }
 
     private byte getQuarter(float x, float y){
         if (x > 0 && y > 0)
             return 1;
-        if (x > 0 && y < 0)
+        if (x < 0 && y > 0)
             return 2;
         if (x < 0 && y < 0)
             return 3;
-        if (x < 0 && y > 0)
+        if (x > 0 && y < 0)
             return 4;
         return 0;
     }

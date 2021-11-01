@@ -2,6 +2,7 @@ package app.servlets;
 
 import app.beans.IStorage;
 import app.beans.StorageBean;
+import org.decimal4j.util.DoubleRounder;
 import org.json.JSONObject;
 
 import javax.ejb.EJB;
@@ -16,7 +17,7 @@ import java.util.Date;
 
 public class AreaCheckServlet extends HttpServlet {
 
-    private StorageBean storage= new StorageBean();
+    /*private StorageBean storage= new StorageBean();*/
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
@@ -25,6 +26,8 @@ public class AreaCheckServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
+        StorageBean storage = (StorageBean) request.getSession().getAttribute("storage");
+
         long start = System.currentTimeMillis();
         SimpleDateFormat format = new SimpleDateFormat("HH:mm:ss");
 
@@ -44,13 +47,10 @@ public class AreaCheckServlet extends HttpServlet {
         jsonAnswer.put("currentTime", format.format(start));
         jsonAnswer.put("runTime", subTime);
 
-        boolean isClean = Boolean.parseBoolean(request.getParameter("isCleanBean"));
-        if (isClean)
-            storage.cleanJSONTable();
         storage.putJSONAnswer(jsonAnswer);
 
         PrintWriter writer = response.getWriter();
-        writer.println(storage.getJSONTable());
+        writer.println(jsonAnswer);
         writer.close();
     }
 

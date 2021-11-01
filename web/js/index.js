@@ -4,11 +4,17 @@ let height;
 let SCALE_COEF = 0.35
 let r = 0;
 let isGraphCall;
-let isCleanStorage
+let pointsArray = [[],[],[],[],[]];
 
-window.addEventListener('load', pageOpened, false);
+window.addEventListener('unload', closing, false);
 
 function init(){
+    paintGraph();
+    if (localStorage.getItem("storage") != null)
+        pointsArray = JSON.parse(localStorage.getItem("storage"));
+}
+
+function paintGraph(){
     let canvas = document.getElementById("paint");
     st_canv = canvas.getContext("2d");
     wight = $('#paint').width();
@@ -173,7 +179,7 @@ function validateForm(form){
         fail_str += "Не выбрано значение R\n";
     if (fail_str == ""){
         let data = formData(form.xVal.value, form.yVal.value, r)
-        sendData(data)
+        sendData(data);
     }
     else
         alert(fail_str);
@@ -194,54 +200,54 @@ function sendData(data){
         type: "post",
         url: "post",
         data: data,
-        success: function (data){
-            let curData = parseData(data)
+        success: function (AnsData){
             $('table tr:last').after(`<tr>
-                                        <th>${curData.xVal.toFixed(2)}</th>
-                                        <th>${curData.yVal.toFixed(2)}</th>
-                                        <th>${curData.rVal}</th>
-                                        <th>${curData.runTime}</th>
-                                        <th>${curData.currentTime}</th>
-                                        <th>${curData.answer}</th>
+                                        <th>${AnsData.xVal.toFixed(2)}</th>
+                                        <th>${AnsData.yVal.toFixed(2)}</th>
+                                        <th>${AnsData.rVal}</th>
+                                        <th>${AnsData.runTime}</th>
+                                        <th>${AnsData.currentTime}</th>
+                                        <th>${AnsData.answer}</th>
                                       </tr>`);
             if (isGraphCall){
-                printPoint(curData.xVal, curData.yVal, curData.rVal, curData.answer)
+                printPoint(AnsData.xVal, AnsData.yVal, AnsData.rVal, AnsData.answer)
+                remPoint(AnsData.xVal, AnsData.yVal, AnsData.rVal, AnsData.answer)
             }
         }
     });
 }
 
-function parseData(data){
-    let currData = data[data.length - 1]
-    localStorage.setItem("storage", JSON.stringify(data))
-    return currData;
-}
-
-function pageOpened(){
-    let storage = JSON.parse(localStorage.getItem("storage"));
-    if (storage != null){
-        for (let i = 0; i < storage.length; i++){
-            $('table tr:last').after(`<tr>
-                                        <th>${storage[i].xVal.toFixed(2)}</th>
-                                        <th>${storage[i].yVal.toFixed(2)}</th>
-                                        <th>${storage[i].rVal}</th>
-                                        <th>${storage[i].runTime}</th>
-                                        <th>${storage[i].currentTime}</th>
-                                        <th>${storage[i].answer}</th>
-                                      </tr>`)
-        }
-    }
-}
 
 function formData(x, y, r){
-    return {"xVal" : x, "yVal": y, "rVal": r, "isCleanBean": isCleanStorage};
+    return {"xVal" : x, "yVal": y, "rVal": r};
 }
 
-function removeStorage(){
-    localStorage.removeItem("storage");
-    isCleanStorage = true;
+function remPoint(x, y, r, answer){
+    let ind = 2 * r - 2;
+    pointsArray[ind].push([x,y,answer]);
+}
+
+function printP2R(rad){
+    let ind = 2 * rad - 2
+    if (pointsArray[ind] != null) {
+        for (let i = 0; i < pointsArray[ind].length; i++){
+            let curPoint = pointsArray[ind][i]
+            printPoint(curPoint[0], curPoint[1], rad, curPoint[2]);
+        }
+    }
+
 }
 
 $('#rVal').change( function (){
     r = $(this).val();
+    st_canv.clearRect(0,0, wight, height);
+    paintGraph();
+    printP2R(r);
 });
+
+function closing(){
+    if (localStorage.getItem("storage") == null)
+        localStorage.setItem("storage", JSON.stringify(pointsArray))
+    else
+        localStorage["storage"] = JSON.stringify(pointsArray);
+}

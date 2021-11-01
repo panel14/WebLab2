@@ -1,4 +1,5 @@
-<%--
+<%@ page import="java.util.ArrayList" %>
+<%@ page import="org.json.JSONObject" %><%--
   Created by IntelliJ IDEA.
   User: verzz
   Date: 13.10.2021
@@ -6,6 +7,7 @@
   To change this template use File | Settings | File Templates.
 --%>
 <%@ page contentType="text/html;charset=UTF-8" %>
+<jsp:useBean id="storage" class="app.beans.StorageBean" scope="session"/>
 <html>
   <head>
     <title>Lab2</title>
@@ -36,7 +38,6 @@
               %>
             </select><br/>
             <input type="button" value="Send" onclick="validateForm(form)">
-            <button onclick="removeStorage()">Очистить таблицу</button>
           </fieldset>
         </form>
       </div>
@@ -51,6 +52,18 @@
             <th>Current Time</th>
             <th>Hit</th>
           </tr>
+          <%
+            ArrayList<JSONObject> table = storage.getJSONTable();
+            for (JSONObject str: table){%>
+          <tr>
+            <th><%=String.format("%.2f", str.getDouble("xVal")) %></th>
+            <th><%=String.format("%.2f", str.getDouble("yVal"))%></th>
+            <th><%=str.get("rVal")%></th>
+            <th><%=str.get("runTime")%></th>
+            <th><%=str.get("currentTime")%></th>
+            <th><%=str.get("answer")%></th>
+          </tr>
+          <%}%>
         </table>
       </div>
       <div id="graph">

@@ -1,23 +1,15 @@
 package app.servlets;
 
-import app.beans.IStorage;
 import app.beans.StorageBean;
-import org.decimal4j.util.DoubleRounder;
 import org.json.JSONObject;
 
-import javax.ejb.EJB;
-import javax.enterprise.context.ApplicationScoped;
 import javax.servlet.*;
 import javax.servlet.http.*;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
 
 public class AreaCheckServlet extends HttpServlet {
-
-    /*private StorageBean storage= new StorageBean();*/
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{

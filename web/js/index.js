@@ -10,8 +10,8 @@ window.addEventListener('unload', closing, false);
 
 function init(){
     paintGraph();
-    if (localStorage.getItem("storage") != null)
-        pointsArray = JSON.parse(localStorage.getItem("storage"));
+    if (sessionStorage.getItem("storage") != null)
+        pointsArray = JSON.parse(sessionStorage.getItem("storage"));
 }
 
 function paintGraph(){
@@ -127,7 +127,7 @@ function printGraph(canvas_context, wight, height){
 function printPoint(x, y, r, answer){
     st_canv.beginPath();
     let points = convertToPrint(x, y, r)
-    if (answer == "Yes")
+    if (answer === "Yes")
         st_canv.fillStyle = "#04a242"
     else
         st_canv.fillStyle = "#ff5555"
@@ -175,9 +175,9 @@ function getCoord(x, y){
 function validateForm(form){
     let fail_str = validateValue(form.xVal.value, "X", [-3, 5]);
     fail_str += validateValue(form.yVal.value, "Y", [-5, 5]);
-    if (r == 0)
+    if (r === 0)
         fail_str += "Не выбрано значение R\n";
-    if (fail_str == ""){
+    if (fail_str === ""){
         let data = formData(form.xVal.value, form.yVal.value, r)
         sendData(data);
     }
@@ -186,7 +186,7 @@ function validateForm(form){
 }
 
 function validateValue(str, valueType, range){
-    if (str == "")
+    if (str === "")
         return "Не введено значение " + valueType + "\n";
     else if (!/^-?\d+([.]\d+)?$/.test(str))
         return "Поле " + valueType + " может содержать только цифры (разделитель - точка)\n";
@@ -246,8 +246,8 @@ $('#rVal').change( function (){
 });
 
 function closing(){
-    if (localStorage.getItem("storage") == null)
-        localStorage.setItem("storage", JSON.stringify(pointsArray))
+    if (sessionStorage.getItem("storage") == null)
+        sessionStorage.setItem("storage", JSON.stringify(pointsArray))
     else
-        localStorage["storage"] = JSON.stringify(pointsArray);
+        sessionStorage["storage"] = JSON.stringify(pointsArray);
 }
